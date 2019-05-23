@@ -61,7 +61,7 @@ if(CMAKE_PROJECT_NAME STREQUAL "gtest" OR CMAKE_PROJECT_NAME STREQUAL "googletes
 
   # BUILD_SHARED_LIBS is a standard CMake variable, but we declare it here to
   # make it prominent in the GUI.
-  option(BUILD_SHARED_LIBS "Build shared libraries (DLLs)." OFF)
+  option(BUILD_SHARED_LIBS "Build shared libraries (DLLs)." ON)
 
 else()
 
@@ -130,8 +130,8 @@ endif()
 # Google Test libraries.  We build them using more strict warnings than what
 # are used for other targets, to ensure that gtest can be compiled by a user
 # aggressive about warnings.
-cxx_library(gtest "${cxx_strict}" src/gtest-all.cc)
-cxx_library(gtest_main "${cxx_strict}" src/gtest_main.cc)
+cxx_shared_library(gtest "${cxx_strict}" src/gtest-all.cc)
+cxx_shared_library(gtest_main "${cxx_strict}" src/gtest_main.cc)
 # If the CMake version supports it, attach header directory information
 # to the targets for when we are part of a parent build (ie being pulled
 # in via add_subdirectory() rather than being a standalone build).
@@ -223,12 +223,12 @@ if (gtest_build_tests)
 
   # MSVC 7.1 does not support STL with exceptions disabled.
   if (NOT MSVC OR MSVC_VERSION GREATER 1310)
-    cxx_library(gtest_no_exception "${cxx_no_exception}"
+    cxx_shared_library(gtest_no_exception "${cxx_no_exception}"
       src/gtest-all.cc)
-    cxx_library(gtest_main_no_exception "${cxx_no_exception}"
+    cxx_shared_library(gtest_main_no_exception "${cxx_no_exception}"
       src/gtest-all.cc src/gtest_main.cc)
   endif()
-  cxx_library(gtest_main_no_rtti "${cxx_no_rtti}"
+  cxx_shared_library(gtest_main_no_rtti "${cxx_no_rtti}"
     src/gtest-all.cc src/gtest_main.cc)
 
   cxx_test_with_flags(gtest-death-test_ex_nocatch_test

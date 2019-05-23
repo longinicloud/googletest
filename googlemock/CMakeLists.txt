@@ -56,7 +56,7 @@ add_subdirectory("${gtest_dir}" "${gmock_BINARY_DIR}/gtest")
 if(CMAKE_PROJECT_NAME STREQUAL "gmock" OR CMAKE_PROJECT_NAME STREQUAL "googletest-distribution")
   # BUILD_SHARED_LIBS is a standard CMake variable, but we declare it here to
   # make it prominent in the GUI.
-  option(BUILD_SHARED_LIBS "Build shared libraries (DLLs)." OFF)
+  option(BUILD_SHARED_LIBS "Build shared libraries (DLLs)." ON)
 else()
   mark_as_advanced(gmock_build_tests)
 endif()
@@ -96,20 +96,20 @@ endif()
 # are used for other targets, to ensure that Google Mock can be compiled by
 # a user aggressive about warnings.
 if (MSVC)
-  cxx_library(gmock
+  cxx_shared_library(gmock
               "${cxx_strict}"
               "${gtest_dir}/src/gtest-all.cc"
               src/gmock-all.cc)
 
-  cxx_library(gmock_main
+  cxx_shared_library(gmock_main
               "${cxx_strict}"
               "${gtest_dir}/src/gtest-all.cc"
               src/gmock-all.cc
               src/gmock_main.cc)
 else()
-  cxx_library(gmock "${cxx_strict}" src/gmock-all.cc)
+  cxx_shared_library(gmock "${cxx_strict}" src/gmock-all.cc)
   target_link_libraries(gmock PUBLIC gtest)
-  cxx_library(gmock_main "${cxx_strict}" src/gmock_main.cc)
+  cxx_shared_library(gmock_main "${cxx_strict}" src/gmock_main.cc)
   target_link_libraries(gmock_main PUBLIC gmock)
 endif()
 # If the CMake version supports it, attach header directory information
@@ -176,10 +176,10 @@ if (gmock_build_tests)
   # C++ tests built with non-standard compiler flags.
 
   if (MSVC)
-    cxx_library(gmock_main_no_exception "${cxx_no_exception}"
+    cxx_shared_library(gmock_main_no_exception "${cxx_no_exception}"
       "${gtest_dir}/src/gtest-all.cc" src/gmock-all.cc src/gmock_main.cc)
 
-    cxx_library(gmock_main_no_rtti "${cxx_no_rtti}"
+    cxx_shared_library(gmock_main_no_rtti "${cxx_no_rtti}"
       "${gtest_dir}/src/gtest-all.cc" src/gmock-all.cc src/gmock_main.cc)
 
     if (MSVC_VERSION LESS 1600)  # 1600 is Visual Studio 2010.
@@ -193,10 +193,10 @@ if (gmock_build_tests)
         gmock_main_use_own_tuple test/gmock-spec-builders_test.cc)
     endif()
   else()
-    cxx_library(gmock_main_no_exception "${cxx_no_exception}" src/gmock_main.cc)
+    cxx_shared_library(gmock_main_no_exception "${cxx_no_exception}" src/gmock_main.cc)
     target_link_libraries(gmock_main_no_exception PUBLIC gmock)
 
-    cxx_library(gmock_main_no_rtti "${cxx_no_rtti}" src/gmock_main.cc)
+    cxx_shared_library(gmock_main_no_rtti "${cxx_no_rtti}" src/gmock_main.cc)
     target_link_libraries(gmock_main_no_rtti PUBLIC gmock)
 
     cxx_library(gmock_main_use_own_tuple "${cxx_use_own_tuple}" src/gmock_main.cc)
